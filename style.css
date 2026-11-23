@@ -1,0 +1,565 @@
+:root {
+            --bg-dark: #121213;
+            --paper-line: rgba(105, 86, 62, 0.25);
+            --dirty-paper: #d4c2a3;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            /* Textura sutil de madeira/superfície escura na penumbra */
+            background-image:
+                radial-gradient(circle at 50% 48%, #19191b 0%, #121213 72%, #0b0b0c 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.01) 0px,
+                    rgba(255, 255, 255, 0.01) 1px,
+                    transparent 1px,
+                    transparent 7px
+                );
+            color: #d6d3cd;
+            font-family: 'Lora', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Granulação analógica da superfície da mesa */
+        .desk-grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.055;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Vinheta profunda nas bordas simulando quarto escuro */
+        .room-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 4;
+            background: radial-gradient(
+                circle at 50% 48%,
+                transparent 26%,
+                rgba(7, 7, 8, 0.68) 68%,
+                rgba(3, 3, 4, 0.96) 100%
+            );
+        }
+
+        /* ================= CORDINHA DA LUMINÁRIA (PULL-CORD) ================= */
+        .cord-stage {
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pull-cord-assembly {
+            position: relative;
+            margin-left: clamp(0px, 16vw, 220px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transform-origin: top center;
+            animation: cordGentleSway 4.8s ease-in-out infinite alternate;
+            transition: transform 0.65s cubic-bezier(0.32, 0, 0.2, 1), opacity 0.45s ease;
+        }
+
+        .pull-cord-assembly:active {
+            cursor: grabbing;
+        }
+
+        /* Quando acionada, a cordinha sobe e sai completamente pela borda superior */
+        .pull-cord-assembly.retracted-out {
+            animation: none !important;
+            transform: translateY(-130%) !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes cordGentleSway {
+            0%   { transform: rotate(-1.6deg); }
+            50%  { transform: rotate(1.4deg); }
+            100% { transform: rotate(-1.1deg); }
+        }
+
+        /* Corrente metálica bolinha-por-bolinha */
+        .beaded-chain {
+            width: 4px;
+            height: 155px;
+            background-image: radial-gradient(circle, #c8b896 42%, transparent 48%);
+            background-size: 4px 6px;
+            background-repeat: repeat-y;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.85));
+            transition: height 0.14s ease-out;
+        }
+
+        /* Pingente pesado de latão e madeira */
+        .cord-weight-bob {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.9));
+            transition: transform 0.2s ease;
+        }
+
+        .pull-cord-assembly:hover .cord-weight-bob {
+            transform: scale(1.05);
+        }
+
+        .brass-collar {
+            width: 12px;
+            height: 8px;
+            border-radius: 3px 3px 1px 1px;
+            background: linear-gradient(90deg, #7d6338 0%, #e4c98b 45%, #6e552c 100%);
+            border-bottom: 1px solid rgba(30, 22, 10, 0.7);
+        }
+
+        .wooden-handle {
+            width: 20px;
+            height: 36px;
+            border-radius: 7px 7px 10px 10px;
+            background: linear-gradient(105deg, #4b321e 0%, #7c5434 38%, #362213 85%, #23150b 100%);
+            border: 1px solid rgba(228, 198, 142, 0.25);
+            box-shadow: inset 0 2px 3px rgba(255, 232, 185, 0.18);
+        }
+
+        .brass-tip {
+            width: 9px;
+            height: 9px;
+            margin-top: -2px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #f3dca4 0%, #8a6b39 75%, #4b381b 100%);
+        }
+
+        .cord-prompt {
+            margin-top: 16px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(22, 22, 24, 0.82);
+            border: 1px solid rgba(235, 213, 168, 0.2);
+            font-family: 'Special Elite', monospace;
+            font-size: 0.76rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(235, 224, 202, 0.85);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+            white-space: nowrap;
+            animation: promptPulse 2.8s ease-in-out infinite;
+        }
+
+        @keyframes promptPulse {
+            0%, 100% { opacity: 0.72; }
+            50%      { opacity: 1; }
+        }
+
+        /* ================= CÍRCULO DE LUZ DA LUMINÁRIA ================= */
+        .lamp-beam-wrapper {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .lamp-circle {
+            width: min(95vw, 900px);
+            height: min(95vw, 900px);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(255, 240, 198, 0.36) 0%,
+                rgba(255, 228, 172, 0.24) 38%,
+                rgba(242, 208, 145, 0.11) 56%,
+                rgba(215, 180, 118, 0.03) 68%,
+                rgba(0, 0, 0, 0) 74%
+            );
+            box-shadow: 0 0 130px 35px rgba(255, 232, 176, 0.08);
+            opacity: 0;
+            transform: scale(0.92);
+        }
+
+        .lamp-circle.igniting {
+            animation: lampFlickerOn 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .lamp-circle.on {
+            opacity: 1;
+            transform: scale(1);
+            animation: warmLampHum 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes lampFlickerOn {
+            0%   { opacity: 0; transform: scale(0.92); }
+            12%  { opacity: 0.88; transform: scale(1.01); }
+            22%  { opacity: 0.18; transform: scale(0.98); }
+            36%  { opacity: 0.96; transform: scale(1.01); }
+            48%  { opacity: 0.48; transform: scale(0.99); }
+            66%  { opacity: 1; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes warmLampHum {
+            0%   { opacity: 0.96; transform: scale(0.995); }
+            100% { opacity: 1; transform: scale(1.015); }
+        }
+
+        /* ================= CENA DA MESA (OCULTA NO ESCURO INICIAL) ================= */
+        .desk-scene {
+            opacity: 0;
+            filter: brightness(0.08);
+            pointer-events: none;
+            transition: opacity 0.42s ease, filter 0.55s ease;
+        }
+
+        .desk-scene.illuminated {
+            opacity: 1;
+            filter: brightness(1);
+            pointer-events: auto;
+        }
+
+        .newspaper-stage-pending {
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(18px);
+            pointer-events: none;
+            transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.65s ease;
+        }
+
+        .newspaper-stage-pending.is-revealed {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Tipografias */
+        .font-typewriter-old {
+            font-family: 'Special Elite', monospace;
+        }
+
+        .font-editorial {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-handwriting {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* ================= 1) JORNAL DOBRADO E ENVELHECIDO ================= */
+        .aged-newspaper {
+            position: relative;
+            background-color: #e6d7b9;
+            background-image:
+                radial-gradient(circle at 14% 18%, rgba(110, 80, 44, 0.24) 0%, transparent 28%),
+                radial-gradient(circle at 86% 80%, rgba(90, 64, 34, 0.28) 0%, transparent 32%),
+                radial-gradient(circle at 68% 20%, rgba(124, 94, 54, 0.15) 0%, transparent 22%),
+                linear-gradient(170deg, rgba(255, 249, 234, 0.36) 0%, rgba(162, 138, 100, 0.24) 100%);
+            color: #221e19;
+            border: 1px solid rgba(112, 88, 58, 0.44);
+            border-radius: 2px;
+            box-shadow:
+                10px 18px 34px rgba(0, 0, 0, 0.82),
+                2px 6px 10px rgba(0, 0, 0, 0.54),
+                inset 0 0 28px rgba(94, 70, 40, 0.34);
+            transform: rotate(-2.4deg);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .aged-newspaper:hover {
+            transform: rotate(-1deg) translateY(-5px) scale(1.018);
+            box-shadow:
+                12px 24px 40px rgba(0, 0, 0, 0.88),
+                0 0 26px rgba(255, 232, 175, 0.14),
+                inset 0 0 22px rgba(94, 70, 40, 0.28);
+        }
+
+        .newspaper-center-fold {
+            position: relative;
+        }
+
+        .newspaper-center-fold::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            transform: translateX(-50%);
+            background: linear-gradient(
+                180deg,
+                rgba(68, 50, 30, 0.08) 0%,
+                rgba(68, 50, 30, 0.34) 50%,
+                rgba(68, 50, 30, 0.08) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* ================= 2) CARTA ANTIGA E SUJA (ENVELOPE) ================= */
+        .dirty-envelope {
+            position: relative;
+            background-color: var(--dirty-paper);
+            background-image:
+                radial-gradient(circle at 18% 22%, rgba(92, 62, 34, 0.3) 0%, transparent 26%),
+                radial-gradient(circle at 82% 76%, rgba(78, 52, 28, 0.36) 0%, transparent 32%),
+                radial-gradient(circle at 74% 25%, rgba(112, 82, 48, 0.2) 0%, transparent 18%),
+                radial-gradient(circle at 32% 84%, rgba(65, 45, 25, 0.26) 0%, transparent 24%),
+                linear-gradient(135deg, rgba(255, 248, 232, 0.34) 0%, rgba(138, 112, 78, 0.26) 100%);
+            border: 1px solid rgba(110, 88, 60, 0.48);
+            border-radius: 2px;
+            box-shadow:
+                -8px 16px 30px rgba(0, 0, 0, 0.82),
+                -2px 5px 9px rgba(0, 0, 0, 0.52),
+                inset 0 0 30px rgba(74, 52, 28, 0.48);
+            transform: rotate(3.4deg);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+            cursor: pointer;
+            user-select: none;
+            perspective: 900px;
+        }
+
+        .dirty-envelope:hover {
+            transform: rotate(1.6deg) translateY(-5px) scale(1.02);
+            box-shadow:
+                -10px 22px 36px rgba(0, 0, 0, 0.88),
+                0 0 26px rgba(255, 232, 175, 0.14),
+                inset 0 0 24px rgba(74, 52, 28, 0.42);
+        }
+
+        .coffee-ring {
+            position: absolute;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            border: 3px solid rgba(88, 54, 26, 0.24);
+            box-shadow: inset 0 0 4px rgba(88, 54, 26, 0.16);
+            pointer-events: none;
+            transform: rotate(18deg);
+        }
+
+        /* Aba triangular articulada do envelope */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 54%;
+            background: linear-gradient(180deg, rgba(164, 138, 100, 0.56) 0%, rgba(118, 94, 62, 0.28) 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-bottom: 1px solid rgba(92, 70, 44, 0.38);
+            transform-origin: top center;
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .dirty-envelope.opening-flap .envelope-flap {
+            transform: rotateX(165deg);
+        }
+
+        /* Folha interna espiando ao abrir o envelope */
+        .envelope-inner-peek {
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            top: 16%;
+            height: 46%;
+            background: #f3ead8;
+            border: 1px solid rgba(120, 98, 70, 0.35);
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(8px);
+            opacity: 0;
+            transition: transform 0.42s ease, opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .dirty-envelope.opening-flap .envelope-inner-peek {
+            transform: translateY(-18px);
+            opacity: 1;
+        }
+
+        /* Carta inicialmente aberta na mesa (aba levantada e folha visível) */
+        .dirty-envelope.is-open-letter .envelope-flap {
+            transform: rotateX(165deg);
+        }
+
+        .dirty-envelope.is-open-letter .envelope-inner-peek {
+            transform: translateY(-14px);
+            opacity: 1;
+        }
+
+        /* Carta lacrada após finalizar o formulário */
+        .dirty-envelope.is-sealed-letter .envelope-flap {
+            transform: rotateX(0deg);
+        }
+
+        .dirty-envelope.is-sealed-letter .envelope-inner-peek {
+            transform: translateY(8px);
+            opacity: 0;
+        }
+
+        .wax-seal {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #922e27 0%, #5c1915 75%, #3d0f0c 100%);
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.58), inset 0 1px 2px rgba(255, 190, 180, 0.28);
+            border: 2px dashed rgba(60, 14, 11, 0.62);
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+        }
+
+        /* Enquanto a carta está aberta aguardando resposta, o lacre ainda não foi carimbado */
+        .dirty-envelope.is-open-letter .wax-seal {
+            transform: scale(0.3);
+            opacity: 0;
+        }
+
+        /* Quando finalizada, o lacre de cera é estampado com destaque */
+        .dirty-envelope.is-sealed-letter .wax-seal {
+            transform: scale(1.12);
+            opacity: 1;
+            box-shadow: 0 4px 12px rgba(92, 25, 21, 0.65), inset 0 1px 3px rgba(255, 200, 190, 0.4);
+        }
+
+        /* Aparição suave da carta após a leitura do jornal */
+        .letter-stage-reveal {
+            opacity: 0;
+            transform: translateY(18px) scale(0.95);
+            pointer-events: none;
+            transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .letter-stage-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* ================= MODAIS (JORNAL ABERTO & CARTA FORMULÁRIO) ================= */
+        .modal-backdrop {
+            background-color: rgba(8, 8, 9, 0.86);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.32s ease;
+        }
+
+        .modal-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .newspaper-sheet {
+            background-color: #eadcc0;
+            background-image:
+                radial-gradient(circle at 12% 14%, rgba(105, 76, 42, 0.24) 0%, transparent 26%),
+                radial-gradient(circle at 88% 84%, rgba(88, 62, 34, 0.28) 0%, transparent 30%),
+                linear-gradient(180deg, rgba(255, 250, 238, 0.36) 0%, rgba(156, 132, 94, 0.24) 100%);
+            box-shadow:
+                0 28px 65px rgba(0, 0, 0, 0.92),
+                inset 0 0 42px rgba(88, 64, 36, 0.36);
+            transform: translateY(18px) scale(0.96);
+            transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .modal-backdrop.open .newspaper-sheet {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Folha de formulário retirada de dentro da carta */
+        .letter-form-sheet {
+            background-color: #efe4ce;
+            background-image:
+                radial-gradient(circle at 12% 12%, rgba(96, 66, 36, 0.22) 0%, transparent 26%),
+                radial-gradient(circle at 88% 86%, rgba(82, 56, 30, 0.26) 0%, transparent 30%),
+                linear-gradient(180deg, rgba(255, 251, 240, 0.45) 0%, rgba(176, 150, 112, 0.22) 100%);
+            box-shadow:
+                0 30px 70px rgba(0, 0, 0, 0.92),
+                inset 0 0 44px rgba(86, 62, 34, 0.34);
+            transform: translateY(34px) scale(0.94);
+            transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .modal-backdrop.open .letter-form-sheet {
+            transform: translateY(0) scale(1);
+        }
+
+        .fold-crease {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(72, 52, 30, 0.28), transparent);
+            box-shadow: 0 1px 2px rgba(255, 250, 235, 0.25);
+        }
+
+        /* Campos tácteis de papel vintage do formulário */
+        .vintage-field {
+            width: 100%;
+            background: rgba(255, 250, 238, 0.42);
+            border: none;
+            border-bottom: 1.5px solid rgba(82, 62, 38, 0.45);
+            border-radius: 2px 2px 0 0;
+            padding: 8px 10px;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.92rem;
+            color: #1f1b16;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .vintage-field::placeholder {
+            color: rgba(88, 72, 52, 0.52);
+            font-style: italic;
+        }
+
+        .vintage-field:focus {
+            outline: none;
+            background: rgba(255, 252, 244, 0.78);
+            border-bottom-color: #5c1915;
+        }
+
+        .vintage-textarea {
+            width: 100%;
+            background-color: rgba(255, 250, 238, 0.42);
+            background-image: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent calc(1.75rem - 1px),
+                var(--paper-line) calc(1.75rem - 1px),
+                var(--paper-line) 1.75rem
+            );
+            border: 1px solid rgba(82, 62, 38, 0.35);
+            border-radius: 2px;
+            padding: 4px 10px;
+            font-family: 'Special Elite', monospace;
+            font-size: 0.92rem;
+            line-height: 1.75rem;
+            color: #1f1b16;
+            resize: vertical;
+        }
+
+        .vintage-textarea::placeholder {
+            color: rgba(88, 72, 52, 0.52);
+            font-style: italic;
+        }
+
+        .vintage-textarea:focus {
+            outline: none;
+            background-color: rgba(255, 252, 244, 0.78);
+            border-color: #5c1915;
+        }

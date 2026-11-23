@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sob a Luminária — Jornal e Carta</title>
+    <!-- Tailwind CSS para layout responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fontes Google: Special Elite, Playfair Display, Lora e Caveat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen flex items-center justify-center">
+
+    <!-- Textura granulada da mesa escura -->
+    <div class="desk-grain" aria-hidden="true"></div>
+
+    <!-- Cone de luz circular da luminária -->
+    <div class="lamp-beam-wrapper" aria-hidden="true">
+        <div id="lampCircle" class="lamp-circle"></div>
+    </div>
+
+    <!-- Vinheta profunda do quarto escuro -->
+    <div class="room-vignette" aria-hidden="true"></div>
+
+    <!-- CORDINHA DA LUMINÁRIA (PENDURADA AO ENTRAR; SOBE E SAI DA TELA AO SER PUXADA) -->
+    <div id="cordStage" class="cord-stage">
+        <div id="pullCordAssembly" class="pull-cord-assembly" role="button" tabindex="0" aria-label="Puxe a cordinha para baixo e solte para acender a luz">
+            <div id="beadedChain" class="beaded-chain" aria-hidden="true"></div>
+            <div class="cord-weight-bob" aria-hidden="true">
+                <div class="brass-collar"></div>
+                <div class="wooden-handle"></div>
+                <div class="brass-tip"></div>
+            </div>
+            <span id="cordPrompt" class="cord-prompt">Puxe a cordinha para baixo e solte para acender</span>
+        </div>
+    </div>
+
+    <!-- MESA ILUMINADA (FLUXO SEQUENCIAL: PRIMEIRO O JORNAL, DEPOIS A CARTA) -->
+    <main id="deskScene" class="desk-scene relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-10">
+
+        <!-- ETAPA 1: JORNAL DOBRADO E AMARELADO -->
+        <section id="newspaperSection" class="newspaper-stage-pending w-full md:w-1/2 flex flex-col items-center justify-center transition-all duration-500" aria-hidden="true" inert>
+            <article id="dirtyNewspaperCard" role="button" tabindex="0" aria-label="Abrir e ler o jornal antigo" class="aged-newspaper newspaper-center-fold w-full max-w-[370px] sm:max-w-[400px] p-5 sm:p-6">
+                <div class="coffee-ring -bottom-5 -right-5 opacity-60" aria-hidden="true"></div>
+
+                <div class="border-b-2 border-stone-800/75 pb-2 mb-3 flex items-center justify-between text-[10px] font-typewriter-old uppercase tracking-widest text-stone-700">
+                    <span>EDIÇÃO ESPECIAL • PROCURADOS</span>
+                    <span id="newspaperBadgeStatus" class="px-1.5 py-0.5 rounded-sm bg-stone-800/10 text-stone-800">
+                        Dobrado • Ler
+                    </span>
+                </div>
+
+                <div class="text-center border-b border-stone-700/40 pb-2.5 mb-3">
+                    <p class="font-typewriter-old text-[10px] tracking-[0.24em] uppercase text-stone-600">
+                        14 DE OUTUBRO DE ####
+                    </p>
+                    <h2 class="font-editorial font-bold text-xl sm:text-2xl tracking-tight text-stone-900 mt-0.5 leading-tight">
+                        RECOMPENSA OFERECIDA PELA MORTE DE ERRO
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-[11px] leading-snug text-stone-800/90">
+                    <div class="pr-2 border-r border-stone-700/25">
+                        <p class="font-typewriter-old uppercase text-[10px] text-stone-900 mb-1">O inimigo de Sapucaia</p>
+                        <p class="line-clamp-4">
+O inimigo de Sapucaia
+
+Após uma série de acontecimentos envolvendo a segurança do território, o Governo Militar de Sapucaia declarou Erro como uma ameaça à estabilidade nacional.
+
+Sua localização permanece desconhecida, mas as autoridades afirmam que sua captura já não é suficiente. A ordem agora é clara: encontrar e eliminar o indivíduo.                        </p>
+                    </div>
+                    <div class="pl-1">
+                        <p class="font-typewriter-old uppercase text-[10px] text-stone-900 mb-1">Termos da recompensa</p>
+                        <p class="line-clamp-4">
+O Governo anuncia uma recompensa extraordinária a qualquer cidadão ou grupo que consiga localizar e comprovar a morte do procurado. A oferta está aberta a civis, militares e caçadores independentes. A identidade dos responsáveis será preservada mediante solicitação.                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-2 border-t border-stone-700/25 flex items-center justify-between text-[11px] font-typewriter-old text-stone-700/85">
+                    <span>Clique para abrir e ler</span>
+                    <span aria-hidden="true">↗</span>
+                </div>
+            </article>
+        </section>
+
+        <!-- ETAPA 2: CARTA ANTIGA (APARECE ABERTA APÓS LER O JORNAL; É LACRADA AO FINALIZAR) -->
+        <section id="letterSection" class="letter-stage-reveal hidden w-full md:w-1/2 flex flex-col items-center justify-center">
+            <article id="dirtyLetterCard" role="button" tabindex="0" aria-label="Preencher e lacrar a carta aberta" class="dirty-envelope is-open-letter w-full max-w-[345px] sm:max-w-[250px] p-6 pt-12 pb-7">
+                <!-- Folha interna visível enquanto a carta está aberta -->
+                <div class="envelope-inner-peek" aria-hidden="true"></div>
+
+                <!-- Aba triangular do envelope -->
+                <div class="envelope-flap" aria-hidden="true"></div>
+
+                <!-- Mancha circular de xícara de café -->
+                <div class="coffee-ring top-5 right-6" aria-hidden="true"></div>
+
+                <!-- Carimbo postal desbotado -->
+                <div class="absolute top-3 left-4 border border-stone-700/45 rounded-sm px-2 py-0.5 text-[9px] font-typewriter-old uppercase tracking-widest text-stone-700/70 -rotate-6">
+                    ARQUIVO • 1984
+                </div>
+
+                <!-- Status da carta -->
+                <div class="absolute top-3 right-3 z-10">
+                    <span id="letterBadgeStatus" class="px-2 py-0.5 rounded-sm bg-stone-900/15 font-typewriter-old text-[10px] uppercase tracking-wider text-stone-800">
+                        Aberta
+                    </span>
+                </div>
+
+                <!-- Lacre de cera central (carimbado ao finalizar) -->
+                <div class="relative z-10 flex justify-center -mt-3 mb-4">
+                    <div class="wax-seal flex items-center justify-center text-[11px] font-typewriter-old text-amber-200/85">
+                        ✦
+                    </div>
+                </div>
+
+                <!-- Texto manuscrito na frente do envelope -->
+
+
+                <div class="mt-5 pt-2.5 border-t border-stone-700/25 flex items-center justify-between text-[11px] font-typewriter-old text-stone-800/85">
+                    <span id="letterFooterHint">Clique para preencher a carta</span>
+                    <span aria-hidden="true">↗</span>
+                </div>
+            </article>
+        </section>
+
+    </main>
+
+    <!-- ================= MODAL 1: JORNAL ABERTO PARA LEITURA ================= -->
+    <div id="newspaperModal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modalNewspaperTitle">
+        <div class="newspaper-sheet relative w-full max-w-2xl rounded-sm p-6 sm:p-9 text-stone-900 max-h-[90vh] overflow-y-auto">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-stone-800/75 pb-3 mb-4">
+                <span class="font-typewriter-old text-xs uppercase tracking-widest text-stone-700">
+                    EDIÇÃO ESPECIAL • PROCURADOS
+                </span>
+                <div class="flex items-center gap-2">
+                    <button id="btnCloseNewspaper" type="button" class="px-3 py-1.5 rounded-sm text-xs font-typewriter-old bg-stone-900/15 hover:bg-stone-900/25 text-stone-900 transition cursor-pointer">
+                        Dobrar jornal ✕
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conteúdo do Jornal -->
+            <div id="newspaperPage1" class="space-y-4">
+                <div class="text-center border-b border-stone-700/40 pb-3">
+                    <p class="font-typewriter-old text-[11px] tracking-[0.24em] uppercase text-stone-600">
+                        14 de Outubro de ####
+                    </p>
+                    <h2 id="modalNewspaperTitle" class="font-editorial font-bold text-2xl sm:text-3xl text-stone-900 mt-1">
+                        RECOMPENSA OFERECIDA PELA MORTE DE ERRO
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm leading-relaxed text-stone-800">
+                    <div class="space-y-3 sm:border-r sm:border-stone-700/25 sm:pr-4">
+                        <h3 class="font-editorial font-semibold text-base text-stone-900 underline decoration-stone-600/40">
+                           O inimigo de Sapucaia
+                        </h3>
+                        <p>
+
+Após uma série de acontecimentos envolvendo a segurança do território, o Governo Militar de Sapucaia declarou Erro como uma ameaça à estabilidade nacional.
+
+Sua localização permanece desconhecida, mas as autoridades afirmam que sua captura já não é suficiente. A ordem agora é clara: encontrar e eliminar o indivíduo.                        </p>
+                        <p>
+O comando militar solicita que qualquer informação sobre o paradeiro de Erro seja imediatamente encaminhada às autoridades locais. Abrigar, auxiliar ou ocultar o procurado será considerado colaboração com o inimigo.                        </p>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="font-editorial font-semibold text-base text-stone-900 underline decoration-stone-600/40">
+                            Termos da recompensa
+                        </h3>
+                        <p>
+
+
+O Governo anuncia uma recompensa extraordinária a qualquer cidadão ou grupo que consiga localizar e comprovar a morte do procurado.
+
+A oferta está aberta a civis, militares e caçadores independentes. A identidade dos responsáveis será preservada mediante solicitação.                        </p>
+                        <div class="p-3 rounded-sm bg-stone-900/5 border border-stone-700/25 text-xs italic text-stone-700">
+"Não haverá negociação, julgamento ou segunda oportunidade. A ameaça deve ser eliminada                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL 2: CARTA ABERTA REVELANDO UM FORMULÁRIO ================= -->
+    <div id="letterModal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="modalLetterFormTitle">
+        <div class="letter-form-sheet relative w-full max-w-xl rounded-sm p-6 sm:p-9 text-stone-900 max-h-[92vh] overflow-y-auto">
+            <!-- Mancha sutil no canto -->
+            <div class="coffee-ring -top-4 -left-4 opacity-70" aria-hidden="true"></div>
+
+            <!-- Botão fechar carta -->
+            <button id="btnCloseLetter" type="button" class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-typewriter-old bg-stone-900/10 hover:bg-stone-900/20 text-stone-800 transition cursor-pointer">
+                Guardar na carta ✕
+            </button>
+
+            <div class="mt-2">
+                <p class="font-typewriter-old text-[11px] uppercase tracking-[0.2em] text-stone-700/80 mb-1">
+        
+                </p>
+                <h2 id="modalLetterFormTitle" class="font-editorial font-bold text-2xl sm:text-3xl text-stone-900">
+                    Ficha do Personagem
+                </h2>
+                <p class="text-xs sm:text-sm text-stone-700/90 italic mt-1">
+                    Preencha os campos para registrar seu personagem nesta carta.
+                </p>
+
+                <div class="fold-crease my-4"></div>
+
+                <!-- FORMULÁRIO DENTRO DA CARTA -->
+                <form id="vintageLetterForm" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="characterName" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                                Seu nome
+                            </label>
+                            <input id="characterName" name="characterName" type="text" placeholder="Digite seu nome" class="vintage-field">
+                        </div>
+
+                        <div>
+                            <label for="characterElement" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                                Elemento
+                            </label>
+                            <input id="characterElement" name="characterElement" type="text" placeholder="Ex.: fogo, água, terra, ar" class="vintage-field">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="characterHistory" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                            História
+                        </label>
+                        <textarea id="characterHistory" name="characterHistory" rows="3" placeholder="Conte a história do personagem..." class="vintage-textarea"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="characterPersonality" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                            Personalidade
+                        </label>
+                        <textarea id="characterPersonality" name="characterPersonality" rows="3" placeholder="Como é a personalidade do personagem?" class="vintage-textarea"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="characterClass" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                            Classe
+                        </label>
+                        <input id="characterClass" name="characterClass" type="text" placeholder="Ex.: guerreiro, mago, arqueiro" class="vintage-field">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="characterHeight" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                                Altura
+                            </label>
+                            <input id="characterHeight" name="characterHeight" type="text" placeholder="Ex.: 1,75 m" class="vintage-field">
+                        </div>
+
+                        <div>
+                            <label for="characterWeapons" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                                Armas
+                            </label>
+                            <input id="characterWeapons" name="characterWeapons" type="text" placeholder="Ex.: espada, arco" class="vintage-field">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="characterComplement" class="block font-typewriter-old text-xs uppercase tracking-wider text-stone-800 mb-1">
+                            Complemento
+                        </label>
+                        <textarea id="characterComplement" name="characterComplement" rows="3" placeholder="Outras informações sobre o personagem..." class="vintage-textarea"></textarea>
+                    </div>
+
+                    <div class="fold-crease my-4"></div>
+
+                    <!-- Confirmação visual ao selar -->
+                    <div id="formConfirmationBox" class="hidden p-3.5 rounded-sm bg-emerald-950/10 border border-emerald-900/30 text-stone-900">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-[#7a221c] inline-block shrink-0"></span>
+                            <p class="font-typewriter-old text-xs sm:text-sm">
+                                Ficha do personagem selada com cera e arquivada com sucesso.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                        <button id="btnClearForm" type="button" class="px-3 py-2 rounded-sm text-xs font-typewriter-old text-stone-700 hover:text-stone-950 hover:bg-stone-900/10 transition cursor-pointer">
+                            Limpar folha
+                        </button>
+
+                        <button id="btnSealLetterSubmit" type="submit" class="px-5 py-2.5 rounded-sm text-xs sm:text-sm font-typewriter-old tracking-wider uppercase bg-[#5c1915] hover:bg-[#47120f] text-amber-100 shadow-md transition flex items-center gap-2 cursor-pointer">
+                            <span>✦</span>
+                            <span>Finalizar e Lacrar Carta</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
